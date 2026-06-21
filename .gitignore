@@ -1,0 +1,8 @@
+.vscode
+node_modules
+package-lock.json
+.htaccess
+.env
+.DS_STORE
+data/*
+!data/.keep

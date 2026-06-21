@@ -1,0 +1,19 @@
+{
+    "name": "App",
+    "short_name": "App",
+    "admin_name": "App for Admin",
+
+    "version": "1.0.0",
+    
+    "description": "Lorem ipsum",
+
+    "icon": "/icon.webp",
+    "thumbnail": "/thumbnail.webp",
+    
+    "path": {
+        "host": "https://app.agapedimas.com",
+        "ui": "https://assets.agapedimas.com"
+    },
+
+    "port": 3000
+}
