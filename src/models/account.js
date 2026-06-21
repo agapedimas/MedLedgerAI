@@ -4,7 +4,7 @@ class Account {
      * @param { string } email
      * @param { string } fullname
      * @param { number } created
-     * @param { "owner" | "admin" | "member" } role
+     * @param { "owner" | "admin" | "patient" | "doctor" } role
      * @param { string? } pictureId
      */
     constructor(id, email, fullname, created, role, pictureId) {

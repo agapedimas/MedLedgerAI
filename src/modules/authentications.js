@@ -77,6 +77,9 @@ async function checkAccess(authenticationId, allowedRoles) {
  * @returns { Promise<boolean> }
  */
 async function checkCredentials(email, password) {
+    if (!email || !password)
+        return false;
+    
     // Get password from database
     const result = await Database.doQuery("SELECT password FROM Account WHERE email=?", email);
     

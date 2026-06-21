@@ -1,0 +1,70 @@
+<ad-title>Masuk</ad-title>
+
+<div class="panel" id="mainPanel" theme="light">
+    <img src="<#? appicon ?#>" ad-goto="/"/>
+    <div class="title"><#? apptitleadmin ?#></div>
+    <div class="subtitle">Masuk untuk mengakses dan mengelola data medis Anda.</div>
+    <div class="inputs">
+        <input type="email" id="emailInput" ad-text="Email" autofocus/>
+        <input type="password" id="passwordInput" ad-text="Kata Sandi"/>
+    </div>
+    <div class="buttons">
+        <span class="error hidden" id="generalErrorText"></span>
+        <button class="accent" id="signInButton" disabled>
+            <div class="progressring"></div>
+            <span>Masuk</span>
+        </button>
+        <div class="suggestion">
+            Belum punya akun?
+            <a class="link" ad-goto="/signup">Daftar</a>
+        </div>
+    </div>
+</div>
+
+<script src="/auth.js"></script>
+<script>
+    // Register inputs and handle button state automatically
+    registerFields(
+        [emailInput, passwordInput], 
+        signInButton, 
+        []
+    );
+
+    // Handle sign in action using the uniform promise structure
+    signInButton.onaction = function() {
+        generalErrorText.classList.add("hidden");
+        
+        return new Promise(function(resolve) {
+            $.ajax
+            ({
+                url: "/signin",
+                type: "POST",
+                data: 
+                { 
+                    email: emailInput.value, 
+                    password: passwordInput.value
+                },
+                success: function(data) {
+                    // Redirect user based on role target path from backend
+                    window.location.replace(data.redirect);
+                },
+                error: function(error) {
+                    resolve(false);
+                    
+                    // Display appropriate error message based on http status
+                    generalErrorText.classList.remove("hidden");
+                    
+                    if (error.status == 401) {
+                        generalErrorText.innerText = "Email atau kata sandi salah.";
+                    } else if (error.status == 0) {
+                        generalErrorText.innerText = "Tidak ada koneksi internet.";
+                    } else if (error.status >= 500 && error.status < 600) {
+                        generalErrorText.innerText = "Sistem sedang bermasalah. Coba lagi nanti.";
+                    } else {
+                        generalErrorText.innerText = error.responseText || "Terjadi kesalahan yang tidak diketahui.";
+                    }
+                }
+            });
+        });
+    }
+</script>

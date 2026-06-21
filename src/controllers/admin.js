@@ -2,16 +2,23 @@ const path = require("path");
 
 const Accounts = require("../modules/accounts");
 const Authentications = require("../modules/authentications");
+const AdminStats = require("../modules/adminStats");
 
-function checkAccess(req, res, next) {
-    if (Authentications.checkAccess(req.session.account, ["owner", "admin"]))
+/**
+ * Middleware to ensure the user has owner or admin privileges
+ */
+async function checkAccess(req, res, next) {
+    if (await Authentications.checkAccess(req.session.account, ["owner", "admin"]))
         next();
     else
         return res.status(403).send();
 }
 
+/**
+ * Handle initial page rendering and inject active user context
+ */
 async function preRender(req, res, next) {
-    if (Authentications.checkAccess(req.session.account, ["owner", "admin"]) == false) {
+    if (await Authentications.checkAccess(req.session.account, ["owner", "admin", "patient", "doctor"]) == false) {
         // If path doesn't specify file extension
         if (!path.extname(req.path))
             return res.redirect("/signin?continue=" + decodeURIComponent(req.url));
@@ -23,18 +30,73 @@ async function preRender(req, res, next) {
     
     Object.assign(req.variables, {
         "activeUser": JSON.stringify(account),
-        "activeUser.id": account.id,
-        "activeUser.email": account.email,
-        "activeUser.fullname": account.fullname,
-        "activeUser.pictureId": account.pictureId,
-        "activeUser.role": account.role,
-        "activeUser.created": account.created
+        "activeUser.id": account?.id,
+        "activeUser.email": account?.email,
+        "activeUser.fullname": account?.fullname,
+        "activeUser.pictureId": account?.pictureId,
+        "activeUser.role": account?.role,
+        "activeUser.created": account?.created
     });
 
     return next();
 }
 
+/**
+ * Retrieve all registered accounts
+ */
+async function getAllAccounts(req, res, next) {
+    const users = await Accounts.getAll();
+    return res.send(users);
+}
+
+/**
+ * Change the role of a specific account (e.g. patient to doctor)
+ */
+async function changeAccountRole(req, res, next) {
+    const accountId = req.body.accountId;
+    const newRole = req.body.role;
+
+    if (!accountId || !newRole) {
+        return res.status(400).send("Account ID atau role wajib diisi.");
+    }
+
+    const isSuccess = await Accounts.update(accountId, null, null, null, newRole, null);
+    
+    if (isSuccess) {
+        return res.send();
+    } else {
+        return res.status(500).send("Gagal memperbarui role akun.");
+    }
+}
+
+/**
+ * Permanently delete a user account
+ */
+async function deleteAccount(req, res, next) {
+    const accountId = req.body.accountId;
+    
+    if (!accountId) {
+        return res.status(400).send("Account ID wajib diisi.");
+    }
+
+    const isSuccess = await Accounts.remove(accountId);
+    
+    if (isSuccess) {
+        return res.send();
+    } else {
+        return res.status(500).send("Gagal menghapus akun.");
+    }
+}
+
+/**
+ * Retrieve system-wide statistics for the admin dashboard
+ */
+async function getStats(req, res, next) {
+    const stats = await AdminStats.getSystemStats();
+    return res.send(stats);
+}
+
 module.exports = {
-    checkAccess,
-    preRender
+    checkAccess, preRender,
+    getAllAccounts, changeAccountRole, deleteAccount, getStats
 }

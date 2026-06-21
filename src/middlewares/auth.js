@@ -4,4 +4,4 @@ const Server = Middlewares.getServer();
 
 Server.post("/signin", Controllers.signIn);
 Server.post("/signup", Controllers.signUp);
-Server.get("/signup", Controllers.signOut);
+Server.get("/signout", Controllers.signOut);

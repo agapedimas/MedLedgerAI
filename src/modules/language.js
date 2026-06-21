@@ -21,7 +21,7 @@ function Initialize()
 		const language =  languages[i];
 		Languages[i] = language;
 		Data[language] = {};
-		const components = fs.readdirSync(Path_Language + language);
+		const components =
 			// only read json files
 			fs.readdirSync(Path_Language + language, { withFileTypes: true })
 				.map(o => o.isFile() && o.name.endsWith(".json") ? o.name : null)

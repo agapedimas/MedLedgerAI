@@ -31,7 +31,7 @@ function toHashString(rawString, salt) {
 async function isMatch(rawString, hashedStringWithSalt) {
     const [salt, hashedDatabaseString] = hashedStringWithSalt.split(":");
     const hashedInputString = await toHashString(rawString, salt);
-    return hashedInputString == hashedDatabaseString; 
+    return hashedInputString == hashedStringWithSalt; 
 }
 
 /**

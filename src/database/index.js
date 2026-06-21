@@ -19,7 +19,7 @@ function initialize() {
     return new Promise(async function(resolve) {
         pool = mySql.createPool({
             connectionLimit: 10,
-            host: "localhost",
+            host: process.env.SQL_HOST,
             port: 3306,
             user: process.env.SQL_USERNAME,
             password: process.env.SQL_PASSWORD,
@@ -76,7 +76,7 @@ function getPool() {
  */
 function doQuery(query, values) {
     return new Promise(function(resolve) {
-        pool.createQuery(query, values, function(error, results) {
+        pool.query(query, values, function(error, results) {
             if (error) {
                 const errorObject = JSON.parse(JSON.stringify(error));
                 console.error(error.message, errorObject);

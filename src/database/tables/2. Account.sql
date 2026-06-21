@@ -18,16 +18,16 @@ CREATE TABLE IF NOT EXISTS Account
             NOT NULL,
         pictureId VARCHAR(255),
             
-        CONSTRAINT fk_role_user 
-            FOREIGN KEY (role) REFERENCES Role(id) 
+        CONSTRAINT fk_account_role 
+            FOREIGN KEY (roleId) REFERENCES Role(id) 
             ON UPDATE CASCADE
     ) 
 ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
-
+-- View to easily fetch account data combined with role name
 CREATE OR REPLACE VIEW AccountView AS
 SELECT
-    id, 
+    Account.id AS id, 
     email, 
     fullname, 
     created, 

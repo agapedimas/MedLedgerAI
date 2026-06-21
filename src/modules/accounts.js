@@ -34,9 +34,12 @@ async function getByAccountId(accountId) {
  * @returns { Promise<Account?> }
  */
 async function getByAuthenticationId(authenticationId) {
+    if (authenticationId == null)
+        return null;
+    
     const results = 
         await Database.doQuery(`
-            SELECT * FROM AccountView 
+            SELECT AccountView.* FROM AccountView 
             JOIN
                 Authentication ON 
                     Authentication.accountId = AccountView.id AND

@@ -1,4 +1,5 @@
 const Language = require("../modules/language");
+const Template = require("../modules/template");
 const Configuration = require("../config");
 
 const appConfig = Configuration.get("app");
@@ -17,10 +18,10 @@ function renderPage(pageType = "main", content = "", language = "en", path = "",
         return "<!DOCTYPE html>" +
             "<html " + Template.Data.Configuration + ">" +
                 "<head>" +
-                    (type === "admin" ? Template.Data.Head_Admin : Template.Data.Head) +
+                    (type == "auth" ? Template.Data.Head_Auth : type === "admin" ? Template.Data.Head_Admin : Template.Data.Head) +
                 "</head>" +
                 "<body>" +
-                    (type === "admin" ? Template.Data.Body_Admin : Template.Data.Body) +
+                    (type == "auth" ? Template.Data.Body_Auth : type === "admin" ? Template.Data.Body_Admin : Template.Data.Body) +
                     Template.Data.Title +
                 "</body>" +
             "</html>";

@@ -60,7 +60,18 @@ async function initialize() {
             req.contentOnly = true;
 
         next();
-    })
+    });
+
+    // read every middleware components
+    require("./ping");
+    require("./language");
+    require("./auth");
+    require("./admin");
+    require("./medicalRecords");
+    require("./consents");
+    require("./accessLogs");
+    require("./chats");
+    require("./main");
 }
 
 function getServer() {

@@ -9,10 +9,8 @@ const Database = require("./database");
 const Middlewares = require("./middlewares");
 const Configuration = require("./config");
 
-const Functions = require("./functions");
-const Template = require("./template");
-const Language = require("./language");
-const Route = require("./route");
+const Template = require("./modules/template");
+const Language = require("./modules/language");
 
 async function initialize()
 {

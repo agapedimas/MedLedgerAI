@@ -1,0 +1,70 @@
+<ad-title>Daftar</ad-title>
+
+<div class="panel" theme="light">
+    <img src="<#? appicon ?#>" ad-goto="/"/>
+    <div class="title"><#? apptitleadmin ?#></div>
+    <div class="subtitle">Daftar untuk membuat akun dan mengakses data medis Anda.</div>
+    <div class="inputs">
+        <input type="text" id="fullnameInput" ad-text="Nama Lengkap" ad-type="name"/>
+        <span class="error hidden" id="fullnameErrorText">Masukkan nama dengan benar</span>
+        
+        <input type="email" id="emailInput" ad-text="Email" ad-type="email"/>
+        <span class="error hidden" id="emailErrorText">Format email tidak valid</span>
+        
+        <input type="password" id="passwordInput" ad-text="Kata Sandi"/>
+        
+        <input type="password" id="passwordConfirmInput" ad-text="Konfirmasi Kata Sandi" ad-type="confirmpassword"/>
+        <span class="error hidden" id="passwordErrorText">Konfirmasi kata sandi tidak sesuai</span>
+    </div>
+    <div class="buttons">
+        <span class="error hidden" id="generalErrorText"></span>
+        <button class="accent" id="signUpButton" disabled>
+            <div class="progressring"></div>
+            <span>Daftar</span>
+        </button>
+        <div class="suggestion">
+            Sudah punya akun?
+            <a class="link" ad-goto="/signin">Masuk</a>
+        </div>
+    </div>
+</div>
+
+<script src="/auth.js"></script>
+<script>
+    // Register inputs and errors to handle validation and button state
+    registerFields(
+        [fullnameInput, emailInput, passwordInput, passwordConfirmInput], 
+        signUpButton, 
+        [fullnameErrorText, emailErrorText, passwordErrorText]
+    )
+
+    // Handle sign up action
+    signUpButton.onaction = function() {
+        generalErrorText.classList.add("hidden");
+        
+        return new Promise(function(resolve){
+            $.ajax
+            ({
+                url: "/signup",
+                type: "POST",
+                data: 
+                { 
+                    fullname: fullnameInput.value, 
+                    email: emailInput.value, 
+                    password: passwordInput.value
+                },
+                success: function(data) {
+                    // Redirect to patient dashboard upon successful registration
+                    window.location.replace("/patient");
+                },
+                error: function(error) {
+                    resolve(false);
+                    
+                    // Show error message from server response
+                    generalErrorText.classList.remove("hidden");
+                    generalErrorText.innerText = error.responseText || "Ada yang salah dengan server. Coba lagi nanti. (" + error.status + ")";
+                }
+            });
+        });
+    }
+</script>

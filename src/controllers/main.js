@@ -27,6 +27,8 @@ async function map(req, res, next) {
             false;
     const isImage = /(\.png|\.webp|\.jpg|\.bmp|\.jpeg)$/g.test(path);
     const pageType = 
+        (path.startsWith("signin") || path.startsWith("signup")) ?
+            "auth" :
         (path.startsWith("admin") || req.isAdmin == true) ? 
             "admin" : "main";
 
@@ -41,9 +43,9 @@ async function map(req, res, next) {
     
         if (req.variables)
             for (const variable of Object.keys(req.variables))
-                data = data.replace(new RegExp("<#\\?(| )" + variable + "(| )\\?#>", "gi"), req.variables[variable] || "");
+                renderedPage = data.replace(new RegExp("<#\\?(| )" + variable + "(| )\\?#>", "gi"), req.variables[variable] || "");
         
-        res.send(data);
+        res.send(renderedPage);
     }
     else if (isJs || isCss) {
         if (isJs)
