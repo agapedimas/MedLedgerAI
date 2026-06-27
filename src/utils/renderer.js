@@ -31,7 +31,7 @@ function renderPage(pageType = "main", content = "", language = "en", path = "",
 
     html = html
         .replace("<#? content ?#>", content)
-        .replace("<#? navigation ?#>", (pageType === "dashboard" ? Template.Data.Navigation_Dashboard : Template.Data.Navigation))
+        .replace("<#? navigation ?#>", (pageType === "dashboard" ? (path.startsWith("/doctor") ? Template.Data.Navigation_Doctor : Template.Data.Navigation_Patient) : Template.Data.Navigation))
         .replace("<#? appsettings ?#>", Template.Data.Settings)
         .replaceAll("<#? applang ?#>", language)
         .replaceAll("<#? apptitle ?#>", appConfig.name)

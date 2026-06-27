@@ -29,7 +29,7 @@ async function map(req, res, next) {
     const pageType = 
         (path.startsWith("signin") || path.startsWith("signup")) ?
             "auth" :
-        (path.startsWith("dashboard")) ? 
+        (path.startsWith("patient") || path.startsWith("doctor")) ? 
             "dashboard" : "main";
 
     if (isHtml) {
@@ -43,8 +43,8 @@ async function map(req, res, next) {
     
         if (req.variables)
             for (const variable of Object.keys(req.variables))
-                renderedPage = data.replace(new RegExp("<#\\?(| )" + variable + "(| )\\?#>", "gi"), req.variables[variable] || "");
-        
+                renderedPage = renderedPage.replace(new RegExp("<#\\?(| )" + variable + "(| )\\?#>", "gi"), req.variables[variable] || "");
+
         res.send(renderedPage);
     }
     else if (isJs || isCss) {

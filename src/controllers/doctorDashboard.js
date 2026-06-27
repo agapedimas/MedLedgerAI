@@ -21,7 +21,7 @@ async function preRender(req, res, next) {
     if (await Authentications.checkAccess(req.session.account, "doctor") == false) {
         // If user already signed in
         if (req.session.account) {
-            res.status(403).sendFile("./src/assets/errors/403.shtml", { root: "./" });
+            return res.status(403).sendFile("./src/assets/errors/403.shtml", { root: "./" });
         }
         else {
             // If path doesn't specify file extension
