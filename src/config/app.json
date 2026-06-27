@@ -6,7 +6,7 @@
     
     "description": "Lorem ipsum",
 
-    "icon": "/icon.webp",
+    "icon": "/assets/icon.png",
     "thumbnail": "/thumbnail.webp",
     
     "path": {
