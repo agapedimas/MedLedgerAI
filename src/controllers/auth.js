@@ -8,9 +8,9 @@ async function needSignIn(req, res, next) {
     if (req.session.account && await Authentications.checkAccess(req.session.account) == true) {
         const account = await Accounts.getByAuthenticationId(req.session.account);
         if (account.role == "doctor")
-            return res.send({ redirect: "/doctor" });
+            return res.redirect("/doctor");
         else if (account.role == "patient")
-            return res.send({ redirect: "/patient" });
+            return res.redirect("/patient");
         else 
             return res.status(504).send("Role akun ini tidak diketahui.");
     }

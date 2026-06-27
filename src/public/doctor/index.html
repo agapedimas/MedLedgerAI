@@ -1,1 +1,31 @@
-<script></script>
+<ad-title>Beranda</ad-title>
+
+<style>
+    #Image_Avatar {
+        position: relative;
+        right: 0;
+        top: calc(var(--padding) * -1 - 40px);
+        float: right;
+        width: 40px;
+        aspect-ratio: 1;
+        border-radius: 100%;
+    }
+    #Image_Avatar:hover {
+        filter: var(--filter-accent-plain-hover);
+    }
+    #Image_Avatar:active {
+        filter: var(--filter-accent-plain-active);
+    }
+
+</style>
+
+<div class="header">
+    <div class="title">
+        Beranda
+    </div>
+</div>
+
+<div class="content">
+    <img id="Image_Avatar" ad-goto="/doctor/settings" src="/avatar/<#? activeuser.id ?#>?v=<#? activeuser.pictureid ?#>"/> 
+
+</div>
