@@ -6,7 +6,7 @@ const Image = require("../utils/image");
 const Database = require("../database");
 const Account = require("../models/account");
 
-const pictureFolderPath = path.resolve(__dirname, "../data/pp");
+const pictureFolderPath = path.resolve(__dirname, "../../data/pp");
 
 /**
  * @returns { Promise<Array<Account>> }
@@ -138,7 +138,9 @@ async function getPictureId(accountId) {
     const account = await getByAccountId(accountId);
     return account.pictureId;
 }
-
+async function getPicture(accountId) {
+    
+}
 /**
  * @param { typeof Account.prototype.id } accountId 
  * @param { Array<Buffer> } buffer 
@@ -168,7 +170,7 @@ async function setPicture(accountId, buffer) {
 async function removePicture(accountId) {
     // Remove old picture if exists
     const oldPictureId = await getPictureId(accountId);
-    if (oldPictureId)
+    if (oldPictureId && fs.existsSync(pictureFolderPath + oldPictureId))
         fs.unlinkSync(pictureFolderPath + oldPictureId);
     
     // Update database

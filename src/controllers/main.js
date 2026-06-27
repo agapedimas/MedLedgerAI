@@ -1,9 +1,48 @@
 const fs = require("fs");
+const path = require("path");
 
 const Accounts = require("../modules/accounts");
 const Authentications = require("../modules/authentications");
 const Language = require("../modules/language");
 const Renderer = require("../utils/renderer");
+
+const pictureFolderPath = path.resolve(__dirname, "../../data/pp");
+
+async function getAvatar(req, res, next) {
+    // Set cache of avatar to 1 year, because it can be refreshed with 'pictureid' query
+    res.header("Cache-Control", "public, max-age=31536000");
+    res.header("Content-Type", "image/webp");
+
+    const accountId = req.params.accountId;
+
+    // Check if picture id exists
+    const pictureId = await Accounts.getPictureId(accountId);
+
+    if (pictureId == null)
+        return res.status(404).send();
+
+    const avatarPath = pictureFolderPath + "/" + pictureId;
+
+    if (fs.existsSync(avatarPath))
+        return res.sendFile(avatarPath);
+    else
+        return res.sendFile("./src/assets/avatar.webp", { root: "./" });
+}
+
+async function setAvatar(req, res, next) {
+    const account = await Accounts.getByAuthenticationId(req.session.account);
+
+    if (!account)
+        return res.status(403).send();
+
+    const buffer = req.files.file.data;
+
+    if (buffer.length > 3000000)
+        return res.status(400).send("Ukuran file tidak boleh melebihi 3 MB.");
+
+    await Accounts.setPicture(account.id, buffer);
+    res.send();
+}
 
 async function map(req, res, next) {
     const prettyPath = prettifyPath(req);
@@ -124,5 +163,6 @@ function prettifyPath(req)
 }
 
 module.exports = {
+    getAvatar, setAvatar,
     map
 }

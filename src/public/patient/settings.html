@@ -1,0 +1,324 @@
+<ad-title>Pengaturan</ad-title>
+
+<div class="header">
+    <div class="buttons">
+        <button class="back" ad-goto="/patient/">Beranda</button>
+    </div>
+    <div class="title">Pengaturan</div>
+</div>
+
+<style>
+    html:not([theme=dark]) .root .main
+    {
+        background: var(--gray-6);
+    }
+    .list
+    {
+        max-width: 800px;
+    }
+
+    @media screen and (max-width: 800px) {
+        .root {
+            grid-auto-rows: auto 0;
+        }
+    }
+
+    #Settings_Account
+    {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 8em auto;
+        margin: 0 0 2em;
+        align-items: center;
+        gap: 1em 1.5em;
+    }
+        #Settings_Account .avatar
+        {
+            position: relative;
+            border-radius: 100%;
+            overflow: hidden;
+        }
+        #Settings_Account .avatar.loading
+        {
+            pointer-events: none;
+        }
+            #Settings_Account .avatar::before
+            {
+                content: "\edfc";
+                position: absolute;
+                bottom: 0;
+                display: grid;
+                font-family: var(--font-icon);
+                font-size: 1.3em;
+                width: 100%;
+                height: 35px;
+                background: #00000080;
+                color: white;
+                align-items: center;
+                justify-content: center;
+                transition: 0.5s var(--key-animation) transform;
+                transform: translateY(100%);
+                z-index: 1;
+            }
+            #Settings_Account .avatar:not(.loading):hover::before
+            {
+                transform: translateY(0);
+            }
+            #Settings_Account .avatar img
+            {
+                display: block;
+                width: 100%;
+                aspect-ratio: 1 / 1;
+                transition: 0.1s filter;
+            }
+            #Settings_Account .avatar:hover img
+            {
+                filter: var(--filter-accent-plain-hover);
+            }
+            #Settings_Account .avatar:active img
+            {
+                filter: var(--filter-accent-plain-active);
+            }
+            #Settings_Account .avatar.loading img
+            {
+                filter: brightness(0.3);
+            }
+            #Settings_Account .avatar .progressring
+            {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 30px;
+                transform: translate(-50%, -50%);
+                display: none;
+                z-index: 1;
+            }
+            #Settings_Account .avatar.loading .progressring
+            {
+                display: block;
+            }
+        #Settings_Account .details
+        {
+            display: block;
+        }
+            #Settings_Account .details .name
+            {    
+                font-size: 1.5em;
+                font-family: var(--font-semibold);
+            }
+            #Settings_Account .details .description
+            {    
+                font-size: 1.5em;
+                font-family: var(--font-semibold);
+                color: var(--foreground-description);
+            }
+            #Settings_Account .details button
+            {
+                margin: 1em 0 0;
+            }
+
+    @media screen and (max-width: 500px) {
+        #Settings_Account {
+            grid-auto-flow: row;
+            grid-auto-columns: auto;
+            justify-items: center;
+            text-align: center;
+            margin-top: var(--padding);
+        }
+            #Settings_Account .avatar {
+                max-width: 150px;
+            }
+    }
+
+    #Settings_Accents
+    {
+        display: grid;
+        grid-auto-flow: column;
+        gap: 2px;
+    }
+        #Settings_Accents .color
+        {
+            width: 25px;
+            height: 25px;
+            border-radius: 100%;
+            outline: 2px solid transparent;
+            transition: 0.4s var(--key-animation) outline, 0.4s var(--key-animation) transform;
+        }
+        #Settings_Accents .color:hover
+        {
+            outline: 2px solid var(--text);
+        }
+            #Settings_Accents .color:active
+        {
+            transform: scale(0.8);
+        }
+        
+        #Settings_Accents .color[accent=red]
+        {
+            background: #ff3b30;
+        }
+        #Settings_Accents .color[accent=yellow]
+        {
+            background: #ffcc00;
+        }
+        #Settings_Accents .color[accent=green]
+        {
+            background: #34c759;
+        }
+        #Settings_Accents .color[accent=cyan]
+        {
+            background: #32ade6;
+        }
+        #Settings_Accents .color[accent=blue]
+        {
+            background: #007aff;
+        }
+        #Settings_Accents .color[accent=indigo]
+        {
+            background: #5856d6;
+        }
+        #Settings_Accents .color[accent=purple]
+        {
+            background: #af52de;
+        }
+</style>
+
+<div class="content">
+    <div id="Settings_Account">
+        <div class="avatar" id="Grid_Avatar" ad-tooltip="Ganti Foto Profil">
+            <div class="progressring"></div>
+            <img id="Image_Avatar" src="/avatar/<#? activeuser.id ?#>?v=<#? activeuser.pictureid ?#>"/>
+        </div>
+        <div class="details">
+            <div class="name"><#? activeuser.fullname ?#></div>
+            <div class="description"><#? activeuser.email ?#></div>
+            <button id="Button_SignOut" class="critical plain">Keluar</button>
+        </div>
+    </div> 
+    <div class="list" ad-header="Penampilan" ad-footer="">
+        <div class="stack">
+            <div>Tema</div>
+            <select class="plain" name="theme" id="Select_Theme">
+                <option value="system">Default Sistem</option>
+                <option value="light">Terang</option>
+                <option value="dark">Gelap</option>
+            </select>
+        </div>
+        <div class="stack">
+            <div>Aksen Warna</div>
+            <div id="Settings_Accents">
+                <div class="color" accent="red"></div>
+                <div class="color" accent="yellow"></div>
+                <div class="color" accent="green"></div>
+                <div class="color" accent="cyan"></div>
+                <div class="color" accent="blue"></div>
+                <div class="color" accent="indigo"></div>
+                <div class="color" accent="purple"></div>
+            </div>
+        </div>
+    </div> 
+    <div class="list" ad-header="Tentang Aplikasi" ad-footer="">
+        <div class="stack">
+            <div>Versi</div>
+            <div style="opacity: 0.6"><#? appversion ?#></div>
+        </div>
+        <div class="stack vertical">
+            <div>Hak Cipta</div>
+            <div style="opacity: 0.6;">© 2026 CrazyCoder. Semua Hak Cipta Dilindungi.</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    Select_Theme.value = localStorage.getItem("theme");
+    Select_Theme.onchange = o => Theme_Change(Select_Theme.value);
+    Button_SignOut.onclick = SignOut;
+
+    for (const colorOption of [...Settings_Accents.children])
+        colorOption.onclick = o => Color_Change(colorOption.getAttribute("accent"));
+    
+    function Color_Change(accent) {
+        localStorage.setItem("accent", accent);
+        CheckAccent();
+    }
+
+    function Theme_Change(theme) {
+        localStorage.setItem("theme", theme);
+        CheckTheme();
+    }
+
+    function SignOut() {
+        Components.ActionSheet.Open({
+            Title: "Apakah kamu yakin mau keluar?",
+            Description: "Kamu bisa masuk lagi kapan saja.",
+            Actions: [
+                { 
+                    Title: "Keluar", Type: "Options.Critical", 
+                    Action: function() {
+                        return new Promise(function() {
+                            window.location.href = "/signout";
+                        });
+                    }
+                },
+                { 
+                    Title: "Batal", Type: "Footer"
+                }
+            ]
+        });     
+    }
+
+    Grid_Avatar.onclick = function() {
+        const fileInput = document.createElement("input");
+        fileInput.classList.add("hidden");
+        fileInput.type = "file";
+        fileInput.accept = ".png, .jpg, .jpeg, .webp";
+        fileInput.onchange = function() {
+            const files = Array.from(this.files);
+
+            if (files.length == 0)
+                return;
+
+            if (files[0].size > 3000000)
+                return Components.Notification.Send({ 
+                    Id: "avatar_failed", 
+                    Title: "Gagal Mengubah Foto Profil", 
+                    Message: "Ukuran file tidak boleh melebihi 3 MB.", 
+                    Icon: "\ufe64", 
+                    Buttons: [{Text: "OK"}] 
+                });
+                
+            const form = new FormData();
+            form.append("file", files[0]);
+
+            Image_Avatar.parentNode.classList.add("loading");
+
+            $.ajax({
+                type: "POST",
+                url: "/avatar",
+                data: form,
+                contentType: false,
+                processData: false,
+                success: async function() {
+                    const url = "/avatar/<#? activeuser.id ?#>?time=" + Date.now();
+                    Image_Avatar.src = url;
+                    Image_Avatar.onload = function() {
+                        Components.Notification.Remove({ Id: "avatar_failed" });
+                        Image_Avatar.parentNode.classList.remove("loading");   
+                    };
+                },
+                error: function(error) {               
+                    Components.Notification.Send({ 
+                        Id: "avatar_failed", 
+                        Title: "Gagal Mengubah Foto Profil", 
+                        Message: error.responseText || "Server kami sedang mengalami masalah. Coba lagi nanti. (" + error.status + ")", 
+                        Icon: "\ufe64", 
+                        Buttons: [{Text: "OK"}] 
+                    });
+                    Image_Avatar.parentNode.classList.remove("loading");    
+                }
+            });
+        }
+        this.parentNode.append(fileInput);
+        fileInput.click();
+    }
+</script>
