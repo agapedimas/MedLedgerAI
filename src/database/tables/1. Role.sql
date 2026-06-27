@@ -14,4 +14,4 @@ ENGINE=InnoDB DEFAULT CHARSET=ascii COLLATE=ascii_bin;
 
     -- Add default system roles including medical personnel and patients
     INSERT IGNORE INTO Role (id, name) 
-    VALUES (1, 'admin'), (2, 'patient');
+    VALUES (1, 'doctor'), (2, 'patient');

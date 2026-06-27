@@ -8,7 +8,7 @@ const AdminStats = require("../modules/adminStats");
  * Middleware to ensure the user has owner, admin, or patient privileges
  */
 async function checkAccess(req, res, next) {
-    if (await Authentications.checkAccess(req.session.account, "patient"))
+    if (await Authentications.checkAccess(req.session.account, "doctor"))
         next();
     else
         return res.status(403).send();
@@ -18,7 +18,7 @@ async function checkAccess(req, res, next) {
  * Handle initial page rendering and inject active user context
  */
 async function preRender(req, res, next) {
-    if (await Authentications.checkAccess(req.session.account, "patient") == false) {
+    if (await Authentications.checkAccess(req.session.account, "doctor") == false) {
         // If user already signed in
         if (req.session.account) {
             res.status(403).sendFile("./src/assets/errors/403.shtml", { root: "./" });
@@ -47,6 +47,15 @@ async function preRender(req, res, next) {
     return next();
 }
 
+/**
+ * Retrieve system-wide statistics for the admin dashboard
+ */
+async function getStats(req, res, next) {
+    const stats = await AdminStats.getSystemStats();
+    return res.send(stats);
+}
+
 module.exports = {
-    checkAccess, preRender
+    checkAccess, preRender,
+    getStats
 }

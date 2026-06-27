@@ -5,8 +5,14 @@ const Authentications = require("../modules/authentications");
  * Check if user already signed in
  */
 async function needSignIn(req, res, next) {
-    if (req.sesion.account && await Authentications.checkAccess(req.session.account) == true) {
-        res.redirect("/dashboard");
+    if (req.session.account && await Authentications.checkAccess(req.session.account) == true) {
+        const account = await Accounts.getByAuthenticationId(req.session.account);
+        if (account.role == "doctor")
+            return res.send({ redirect: "/doctor" });
+        else if (account.role == "patient")
+            return res.send({ redirect: "/patient" });
+        else 
+            return res.status(504).send("Role akun ini tidak diketahui.");
     }
     else {
         next();
@@ -25,7 +31,12 @@ async function confirmSignIn(req, res, next) {
         const account = await Accounts.getByEmail(email);
         const authenticationId = await Authentications.add(account.id, req.ip);
         req.session.account = authenticationId;
-        return res.send({ redirect: "/dashboard" });
+        if (account.role == "doctor")
+            return res.send({ redirect: "/doctor" });
+        else if (account.role == "patient")
+            return res.send({ redirect: "/patient" });
+        else 
+            return res.status(504).send("Role akun ini tidak diketahui.");
     }
     else {
         return res.status(401).send("Email atau kata sandi salah.");

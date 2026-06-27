@@ -66,6 +66,7 @@ async function initialize() {
     require("./ping");
     require("./language");
     require("./auth");
+    require("./doctorDashboard");
     require("./patientDashboard");
     require("./medicalRecords");
     require("./consents");
