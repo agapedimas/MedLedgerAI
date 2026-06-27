@@ -5,10 +5,10 @@ const Authentications = require("../modules/authentications");
 const AdminStats = require("../modules/adminStats");
 
 /**
- * Middleware to ensure the user has owner or admin privileges
+ * Middleware to ensure the user has owner, admin, or patient privileges
  */
 async function checkAccess(req, res, next) {
-    if (await Authentications.checkAccess(req.session.account, ["owner", "admin"]))
+    if (await Authentications.checkAccess(req.session.account, ["owner", "admin", "patient"]))
         next();
     else
         return res.status(403).send();
@@ -18,7 +18,7 @@ async function checkAccess(req, res, next) {
  * Handle initial page rendering and inject active user context
  */
 async function preRender(req, res, next) {
-    if (await Authentications.checkAccess(req.session.account, ["owner", "admin", "patient", "doctor"]) == false) {
+    if (await Authentications.checkAccess(req.session.account, ["owner", "admin", "patient"]) == false) {
         // If path doesn't specify file extension
         if (!path.extname(req.path))
             return res.redirect("/signin?continue=" + decodeURIComponent(req.url));

@@ -5,7 +5,7 @@ const Configuration = require("../config");
 const appConfig = Configuration.get("app");
 
 /**
- * @param { "admin" | "main" } pageType 
+ * @param { "dashboard" | "main" } pageType 
  * @param { string } content 
  * @param { string } language 
  * @param { string } path 
@@ -18,10 +18,10 @@ function renderPage(pageType = "main", content = "", language = "en", path = "",
         return "<!DOCTYPE html>" +
             "<html " + Template.Data.Configuration + ">" +
                 "<head>" +
-                    (type == "auth" ? Template.Data.Head_Auth : type === "admin" ? Template.Data.Head_Admin : Template.Data.Head) +
+                    (type == "auth" ? Template.Data.Head_Auth : type === "dashboard" ? Template.Data.Head_Dashboard : Template.Data.Head) +
                 "</head>" +
                 "<body>" +
-                    (type == "auth" ? Template.Data.Body_Auth : type === "admin" ? Template.Data.Body_Admin : Template.Data.Body) +
+                    (type == "auth" ? Template.Data.Body_Auth : type === "dashboard" ? Template.Data.Body_Dashboard : Template.Data.Body) +
                     Template.Data.Title +
                 "</body>" +
             "</html>";
@@ -31,11 +31,10 @@ function renderPage(pageType = "main", content = "", language = "en", path = "",
 
     html = html
         .replace("<#? content ?#>", content)
-        .replace("<#? navigation ?#>", (pageType === "admin" ? Template.Data.Navigation_Admin : Template.Data.Navigation))
+        .replace("<#? navigation ?#>", (pageType === "dashboard" ? Template.Data.Navigation_Dashboard : Template.Data.Navigation))
         .replace("<#? appsettings ?#>", Template.Data.Settings)
         .replaceAll("<#? applang ?#>", language)
         .replaceAll("<#? apptitle ?#>", appConfig.name)
-        .replaceAll("<#? apptitleadmin ?#>", appConfig.admin_name)
         .replaceAll("<#? appicon ?#>", appConfig.icon)
         .replaceAll("<#? appassets ?#>", appConfig.path.ui)
         .replaceAll("<#? apphost ?#>", appConfig.path.host)

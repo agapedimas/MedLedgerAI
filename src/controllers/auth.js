@@ -2,9 +2,21 @@ const Accounts = require("../modules/accounts");
 const Authentications = require("../modules/authentications");
 
 /**
+ * Check if user already signed in
+ */
+async function needSignIn(req, res, next) {
+    if (req.sesion.account && await Authentications.checkAccess(req.session.account) == true) {
+        res.redirect("/dashboard");
+    }
+    else {
+        next();
+    }
+}
+
+/**
  * Handle user sign in, create session, and determine redirect path based on role
  */
-async function signIn(req, res, next) {
+async function confirmSignIn(req, res, next) {
     const email = req.body.email?.trim();
     const password = req.body.password?.trim();
     const isValid = await Authentications.checkCredentials(email, password);
@@ -13,20 +25,7 @@ async function signIn(req, res, next) {
         const account = await Accounts.getByEmail(email);
         const authenticationId = await Authentications.add(account.id, req.ip);
         req.session.account = authenticationId;
-        
-        // Determine redirect path based on user role
-        let targetPath;
-        if (account.role === "owner" || account.role === "admin") {
-            targetPath = "/admin";
-        } 
-        else if (account.role === "doctor") {
-            targetPath = "/doctor";
-        }
-        else {
-            targetPath = "/patient";
-        }
-        
-        return res.send({ redirect: targetPath });
+        return res.send({ redirect: "/dashboard" });
     }
     else {
         return res.status(401).send("Email atau kata sandi salah.");
@@ -36,7 +35,7 @@ async function signIn(req, res, next) {
 /**
  * Handle new user registration with default patient role and auto sign in
  */
-async function signUp(req, res, next) {
+async function confirmSignUp(req, res, next) {
     const email = req.body.email?.trim();
     const fullname = req.body.fullname?.trim();
     const password = req.body.password;
@@ -65,7 +64,7 @@ async function signUp(req, res, next) {
 /**
  * Handle user sign out and destroy session
  */
-async function signOut(req, res, next) {
+async function confirmSignOut(req, res, next) {
     if (req.session.account) {
         await Authentications.remove(req.session.account);
         delete req.session.account;
@@ -75,5 +74,6 @@ async function signOut(req, res, next) {
 }
 
 module.exports = {
-    signIn, signUp, signOut
+    needSignIn,
+    confirmSignIn, confirmSignUp, confirmSignOut
 }

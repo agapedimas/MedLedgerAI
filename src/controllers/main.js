@@ -29,8 +29,8 @@ async function map(req, res, next) {
     const pageType = 
         (path.startsWith("signin") || path.startsWith("signup")) ?
             "auth" :
-        (path.startsWith("admin") || req.isAdmin == true) ? 
-            "admin" : "main";
+        (path.startsWith("dashboard")) ? 
+            "dashboard" : "main";
 
     if (isHtml) {
         let data;
@@ -39,7 +39,7 @@ async function map(req, res, next) {
         else
             data = fs.readFileSync(rootPath + path + ".html", { encoding: "utf-8" });
 
-        const renderedPage = Renderer.renderPage(pageType, data, req.session.language, path, req.contentOnly == true);
+        let renderedPage = Renderer.renderPage(pageType, data, req.session.language, path, req.contentOnly == true);
     
         if (req.variables)
             for (const variable of Object.keys(req.variables))
